@@ -1,0 +1,48 @@
+# Balishious AI Bot - Buttons + Image
+import os
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
+import requests
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+PRICE = "Basic Setup: $15\nHosting: $5/month\nDelivery 1-2 days"
+LOCATION = "Kahna Lahore, Pakistan - Worldwide"
+CONTACT = "Telegram: @balishious_ai_bot\nFiverr: Inbox me\nInsta: @relax_peter"
+PRODUCTS = "24/7 AI Bot\nEnglish & Roman Urdu\nGroq AI + Image Gen"
+
+def keyboard():
+    return InlineKeyboardMarkup([
+        [InlineKeyboardButton("💰 Price", callback_data="price"), InlineKeyboardButton("📍 Location", callback_data="loc")],
+        [InlineKeyboardButton("📞 Contact", callback_data="cont"), InlineKeyboardButton("🛍️ Products", callback_data="prod")]
+    ])
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(f"Hello {update.effective_user.first_name}! 🤖 Balishious Bot\nTry /image cat", reply_markup=keyboard())
+
+async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("/start - Start\n/image cat - Generate image\n/help - Help", reply_markup=keyboard())
+
+async def image_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    prompt = " ".join(context.args) if context.args else "cute cat"
+    await update.message.reply_text(f"Generating: {prompt}... 🎨")
+    url = f"https://image.pollinations.ai/prompt/{prompt}"
+    await update.message.reply_photo(photo=url, caption=f"{prompt}", reply_markup=keyboard())
+
+async def btn(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    q = update.callback_query
+    await q.answer()
+    if q.data=="price": await q.message.reply_text(PRICE, reply_markup=keyboard())
+    if q.data=="loc": await q.message.reply_text(LOCATION, reply_markup=keyboard())
+    if q.data=="cont": await q.message.reply_text(CONTACT, reply_markup=keyboard())
+    if q.data=="prod": await q.message.reply_text(PRODUCTS, reply_markup=keyboard())
+
+async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(f"You: {update.message.text}\nTry /image cat", reply_markup=keyboard())
+
+app = Application.builder().token(BOT_TOKEN).build()
+app.add_handler(CommandHandler("start", start))
+app.add_handler(CommandHandler("help", help_cmd))
+app.add_handler(CommandHandler("image", image_cmd))
+app.add_handler(CallbackQueryHandler(btn))
+app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, chat))
+app.run_polling()
