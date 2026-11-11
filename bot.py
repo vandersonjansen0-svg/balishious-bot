@@ -1,5 +1,12 @@
 # Balishious AI Bot - Buttons + Image
-import os
+import os 
+from flask import Flask
+import threading
+flask_app = Flask(__name__)
+@flask_app.route('/')
+def home(): return "Balishious Bot Live!"
+def run_flask(): flask_app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 10000)))
+threading.Thread(target=run_flask, daemon=True).start()
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 import requests
