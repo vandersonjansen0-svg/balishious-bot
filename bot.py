@@ -16,6 +16,8 @@ PRICE = "Basic Setup: $15\nHosting: $5/month\nDelivery 1-2 days"
 LOCATION = "Kahna Lahore, Pakistan - Worldwide"
 CONTACT = "Telegram: @balishious_ai_bot\nFiverr: Inbox me\nInsta: @relax_peter"
 PRODUCTS = "24/7 AI Bot\nEnglish & Roman Urdu\nGroq AI + Image Gen"
+GROQ_KEY = os.getenv("GROQ_API_KEY")
+user_state = {}
 
 def keyboard():
     return InlineKeyboardMarkup([
@@ -42,10 +44,18 @@ async def btn(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if q.data=="loc": await q.message.reply_text(LOCATION, reply_markup=keyboard())
     if q.data=="cont": await q.message.reply_text(CONTACT, reply_markup=keyboard())
     if q.data=="prod": await q.message.reply_text(PRODUCTS, reply_markup=keyboard())
-
+def groq_reply(text):
+    try:
+        r = requests.post("https://api.groq.com/openai/v1/chat/completions",
+            headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
+            json={"model": "llama-3.1-8b-instant", "messages": [{"role": "system", "content": "You are Balishious AI assistant. Reply in English + Roman Urdu mix, friendly, short."}, {"role": "user", "content": text}]}, timeout=20)
+        return r.json()["choices"][0]["message"]["content"]
+    except:
+        return "Sorry, thoda masla hua - dobara likhein!"
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(f"You: {update.message.text}\nTry /image cat", reply_markup=keyboard())
-
+  
+    reply = groq_reply(update.message.text)
+    await update.message.reply_text(reply, reply_markup=keyboard())
 app = Application.builder().token(BOT_TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", help_cmd))
