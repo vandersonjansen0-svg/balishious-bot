@@ -1,4 +1,4 @@
-# Balishious AI Bot - Buttons + Image
+
 import os 
 from flask import Flask
 import threading
@@ -48,10 +48,10 @@ def groq_reply(text):
     try:
         r = requests.post("https://api.groq.com/openai/v1/chat/completions",
             headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
-            json={"model": "llama-3.1-8b-instant", "messages": [{"role": "system", "content": "You are Balishious AI assistant. Reply in English + Roman Urdu mix, friendly, short."}, {"role": "user", "content": text}]}, timeout=20)
+            json={"model": "llama-3.1-8b-instant", "messages": [{"role": "system", "content": "You are Balishious AI assistant. Reply in professional English only, friendly, short."}, {"role": "user", "content": text}]}, timeout=20)
         return r.json()["choices"][0]["message"]["content"]
     except:
-        return "Sorry, thoda masla hua - dobara likhein!"
+          return "Sorry, something went wrong - please try again!"
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
   
     reply = groq_reply(update.message.text)
