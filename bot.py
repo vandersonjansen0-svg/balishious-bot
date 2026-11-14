@@ -15,7 +15,7 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 PRICE = "Basic Setup: $15\nHosting: $5/month\nDelivery 1-2 days"
 LOCATION = "Kahna Lahore, Pakistan - Worldwide"
 CONTACT = "Telegram: @balishious_ai_bot\nFiverr: Inbox me\nInsta: @relax_peter"
-PRODUCTS = "24/7 AI Bot\nEnglish & Roman Urdu\nGroq AI + Image Gen"
+PRODUCTS = "24/7 AI Bot\English Only\nGroq AI + Image Gen"
 GROQ_KEY = os.getenv("GROQ_API_KEY")
 user_state = {}
 
@@ -48,7 +48,7 @@ def groq_reply(text):
     try:
         r = requests.post("https://api.groq.com/openai/v1/chat/completions",
             headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
-            json={"model": "llama-3.1-8b-instant", "messages": [{"role": "system", "content": "You are Balishious AI assistant. Reply in professional English only."}, {"role": "user", "content": text}]}, timeout=20)
+                      json={"model": "llama-3.1-8b-instant", "messages": [{"role": "system", "content": "You are Balishious AI assistant. Reply in professional English only."}, {"role": "user", "content": text}]}, timeout=20)
         return r.json()["choices"][0]["message"]["content"]
     except:
         return "Sorry, something went wrong - please try again!"
