@@ -1,4 +1,4 @@
-
+z
 import os 
 from flask import Flask
 import threading
@@ -53,7 +53,11 @@ def groq_reply(text):
     except Exception as e:
         return f"Groq Error: {e}"
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = update.message.text.lower()
+      text = update.message.text.lower()
+    if "hello" in text or "hi" in text:
+        await update.message.reply_text("Hello! Welcome to Balishious AI Bot! 🤖\n\nI can help you with Price, Order, Image Generation and more.\n\nWhat would you like to do?", reply_markup=keyboard())
+    else:
+        await update.message.reply_text(f"Hello! Thanks for your message: {update.message.text}\n\nPlease use buttons below or try /image cat", reply_markup=keyboard())
     if "hello" in text or "hi" in text:
         await update.message.reply_text("Hello! Welcome to Balishious AI Bot! 🤖\n\nI can help you with Price, Order, Image Generation and more.\n\nWhat would you like to do?", reply_markup=keyboard())
     else:
