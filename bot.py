@@ -53,9 +53,11 @@ def groq_reply(text):
     except Exception as e:
         return f"Groq Error: {e}"
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
-      await update.message.reply_text(f"Hello! Thanks for your message: {update.message.text}\nTry /image cat or use buttons below!", reply_markup=keyboard())
-    reply = groq_reply(update.message.text)
-    await update.message.reply_text(reply, reply_markup=keyboard())
+    text = update.message.text.lower()
+    if "hello" in text or "hi" in text:
+        await update.message.reply_text("Hello! Welcome to Balishious AI Bot! 🤖\n\nI can help you with Price, Order, Image Generation and more.\n\nWhat would you like to do?", reply_markup=keyboard())
+    else:
+        await update.message.reply_text(f"Hello! Thanks for your message: {update.message.text}\n\nPlease use buttons below or try /image cat", reply_markup=keyboard())
 app = Application.builder().token(BOT_TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("help", help_cmd))
