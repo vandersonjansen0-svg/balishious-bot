@@ -49,7 +49,7 @@ def groq_reply(text):
         r = requests.post("https://api.groq.com/openai/v1/chat/completions",
             headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
             json={"model": "llama-3.3-70b-versatile", "messages": [{"role": "system", "content": "You are Balishious AI assistant. Reply in professional English only."}, {"role": "user", "content": text}]}, timeout=20)
-        return r.json()["choices"][0]["message"]["content"]
+                return f"Groq Raw: {r.text[:300]}"
     except Exception as e:
         return f"Groq Error: {e}"
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
