@@ -45,19 +45,13 @@ async def btn(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if q.data=="cont": await q.message.reply_text(CONTACT, reply_markup=keyboard())
     if q.data=="prod": await q.message.reply_text(PRODUCTS, reply_markup=keyboard())
 def groq_reply(text):
-    try:
-        r = requests.post("https://api.groq.com/openai/v1/chat/completions",
-            headers={"Authorization": f"Bearer {GROQ_KEY}", "Content-Type": "application/json"},
-            json={"model": "llama-3.3-70b-versatile", "messages": [{"role": "system", "content": "You are Balishious AI assistant. Reply in professional English only."}, {"role": "user", "content": text}]}, timeout=20)
-                return f"Groq Raw: {r.text[:300]}"
-    except Exception as e:
-        return f"Groq Error: {e}"
+    return "Hello! Welcome to Balishious AI Bot!"
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
-      text = update.message.text.lower()
+    text = update.message.text.lower()
     if "hello" in text or "hi" in text:
-        await update.message.reply_text("Hello! Welcome to Balishious AI Bot! 🤖\n\nI can help you with Price, Order, Image Generation and more.\n\nWhat would you like to do?", reply_markup=keyboard())
+        await update.message.reply_text("Hello! Welcome to Balishious AI Bot! 🤖\n\nI can help you with Price, Order, Image Generation and more.", reply_markup=keyboard())
     else:
-        await update.message.reply_text(f"Hello! Thanks for your message: {update.message.text}\n\nPlease use buttons below or try /image cat", reply_markup=keyboard())
+        await update.message.reply_text(f"Hello! Thanks for your message: {update.message.text}", reply_markup=keyboard())
     if "hello" in text or "hi" in text:
         await update.message.reply_text("Hello! Welcome to Balishious AI Bot! 🤖\n\nI can help you with Price, Order, Image Generation and more.\n\nWhat would you like to do?", reply_markup=keyboard())
     else:
