@@ -53,7 +53,7 @@ def groq_reply(text):
     except Exception as e:
         return f"Groq Error: {e}"
 async def chat(update: Update, context: ContextTypes.DEFAULT_TYPE):
-  
+      await update.message.reply_text(f"Hello! Thanks for your message: {update.message.text}\nTry /image cat or use buttons below!", reply_markup=keyboard())
     reply = groq_reply(update.message.text)
     await update.message.reply_text(reply, reply_markup=keyboard())
 app = Application.builder().token(BOT_TOKEN).build()
